@@ -22,5 +22,16 @@ module Nephos
          # TODO: implement
          Container.new name
       end
+
+      def list_containers
+         request = Nephos::Get.new request_path('')
+         request.comp = 'list'
+
+         connection = new_connection request
+         response = connection.do_request
+         check_response response
+
+         []
+      end
    end
 end

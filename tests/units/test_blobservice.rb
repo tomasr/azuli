@@ -13,5 +13,10 @@ class TestBlobService < Test::Unit::TestCase
       container = @svc.create_container name, true, { :prop1 => 'value' }
       assert_equal(name, container.name)
    end
+
+   def test_can_list_containers
+      list = @svc.list_containers
+      assert_greater(list.length, 0)
+   end
 end
 

@@ -69,7 +69,7 @@ module Nephos
          def request_path(request, account)
             # TODO: Warning; here we can only include the comp qstring argument
             # remove the rest
-            '/' + account + request.path
+            '/' + account + request.signable_path
          end
       end
    end
