@@ -12,7 +12,6 @@ module Nephos
 
          connection = new_connection
          connection.do_request(request, true)
-         connection.close
          find_container name
       end
 
@@ -28,7 +27,6 @@ module Nephos
          until marker == '' do
             marker = do_list_containers(connection, marker, containers)
          end
-         connection.close
          containers
       end
 
@@ -39,7 +37,6 @@ module Nephos
          request.add_qstring('marker', marker) if marker
 
          response = connection.do_request request
-         check_response response
 
          list_xml = XmlSimple.xml_in(response.body, 'ForceArray' => false)
          containers.concat extract_containers(list_xml)

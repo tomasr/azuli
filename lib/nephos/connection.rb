@@ -88,10 +88,6 @@ module Nephos
          response
       end
 
-      def close
-         @http.close
-      end
-
       def http_class
          # TODO: add proxy support
          Net::HTTP
