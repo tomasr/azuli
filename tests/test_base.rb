@@ -10,6 +10,6 @@ class Test::Unit::TestCase
          :blob_service => 'http://localhost:8081',
          :timeout => 30
       }
-      blob_service options
+      Nephos.blob_service options
    end
 end

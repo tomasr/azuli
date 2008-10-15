@@ -4,8 +4,9 @@ module Nephos
          connection_options(options[:blob_service], options)
       end
 
-      # TODO: add metadata properties
       def create_container(name, public_access = true, metadata = {})
+         Container.validate_name name
+
          request = Nephos::Put.new request_path(name)
          request.add_metadata metadata
          request.set_property :publicaccess, public_access

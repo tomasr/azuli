@@ -9,7 +9,7 @@ class TestBlobService < Test::Unit::TestCase
    end
 
    def test_can_create_container
-      name = "0x%x" % (rand() * 10000000)
+      name = "x%x" % (rand() * 10000000)
       container = @svc.create_container name, true, { :prop1 => 'value' }
       assert_equal(name, container.name)
    end
