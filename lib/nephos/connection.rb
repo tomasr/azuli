@@ -9,7 +9,12 @@ module Nephos
          qstring_args['comp'] = operation
       end
       def add_qstring(name, value)
-         qstring_args[name] = value
+         qstring_args[name.to_s] = value.to_s
+      end
+      def add_qstring_params(params)
+         params.each_pair { |key,value|
+            add_qstring(key, value)
+         }
       end
       def add_metadata(metadata)
          metadata.each_pair { |key,value|
@@ -32,7 +37,8 @@ module Nephos
       # Complete request so that headers make sense
       def complete
          @signable_path = save_path
-         path = build_real_path
+         @path = build_real_path
+
          if method == 'PUT' and !body then
             self['content-length'] = 0
          end
@@ -56,7 +62,7 @@ module Nephos
          @qstring
       end
       def save_path
-         spath = path
+         spath = String.new path
          spath << '?comp=' + comp if comp
          spath
       end
@@ -79,8 +85,9 @@ module Nephos
       end
 
       def do_request(request, allow_conflict = false)
-         request.add_qstring 'timeout', @uri.timeout.to_s
+         request.add_qstring 'timeout', @uri.timeout
          request.complete
+
          HMACAuth.authorize request, @uri.account, @uri.shared_key
 
          response = @http.request(request)

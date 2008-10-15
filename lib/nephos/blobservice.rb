@@ -1,7 +1,10 @@
 module Nephos
    class BlobService < Base
+      attr_reader :last_marker
+
       def initialize(options)
          connection_options(options[:blob_service], options)
+         @last_marker = nil
       end
 
       def create_container(name, public_access = true, metadata = {})
@@ -21,21 +24,20 @@ module Nephos
          Container.new({'Name' => name})
       end
 
-      def list_containers
+      def list_containers(options = {})
          connection = new_connection
-         marker = nil
+         @last_marker = nil if !(options[:continue])
          containers = []
-         until marker == '' do
-            marker = do_list_containers(connection, marker, containers)
-         end
+         @last_marker = do_list_containers(connection, options, containers)
          containers
       end
 
       private
-      def do_list_containers(connection, marker, containers)
+      def do_list_containers(connection, options, containers)
          request = Nephos::Get.new request_path('')
          request.comp = 'list'
-         request.add_qstring('marker', marker) if marker
+         request.add_qstring_params options
+         request.add_qstring('marker', last_marker) if last_marker
 
          response = connection.do_request request
 
@@ -43,12 +45,16 @@ module Nephos
          containers.concat extract_containers(list_xml)
 
          new_marker = list_xml['NextMarker']
-         new_marker == {} ? '' : new_marker[0]
+         new_marker == {} ? nil : new_marker
       end
       def extract_containers(list)
-         parsed = list['Containers']['Container'].map { |container|
-            Container.new(container)
-         }
+         containers = list['Containers']
+         if containers.length > 0 then
+            parsed = containers['Container'].map { |container|
+               Container.new(container)
+            }
+         end
+         parsed or []
       end
    end
 end

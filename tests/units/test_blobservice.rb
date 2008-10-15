@@ -22,5 +22,14 @@ class TestBlobService < Test::Unit::TestCase
       assert_not_nil(list[0].last_modified)
       assert_not_nil(list[0].etag)
    end
+   def test_can_list_containers_with_prefix
+      list = @svc.list_containers :prefix => 'doesntexist'
+      assert_equal(0, list.length)
+   end
+   def test_can_list_containers_with_max_results
+      list = @svc.list_containers :maxresults => 5
+      assert((list.length > 0 and list.length < 6))
+      assert_not_nil(@svc.last_marker)
+   end
 end
 
