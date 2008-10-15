@@ -2,6 +2,7 @@ require 'test/unit'
 require File.dirname(__FILE__) + '/../lib/nephos'
 
 class Test::Unit::TestCase
+   include Nephos
    def get_blob_service
       options = {
          :account => 'testaccount1',
@@ -9,6 +10,6 @@ class Test::Unit::TestCase
          :blob_service => 'http://localhost:8081',
          :timeout => 30
       }
-      Nephos.blob_service options
+      blob_service options
    end
 end
