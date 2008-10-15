@@ -11,10 +11,8 @@ module Nephos
          request.set_property :publicaccess, public_access
 
          connection = new_connection
-         response = connection.do_request request
-         # if container already exist, that's fine
-         check_response response, true
-
+         connection.do_request(request, true)
+         connection.close
          find_container name
       end
 
@@ -30,6 +28,7 @@ module Nephos
          until marker == '' do
             marker = do_list_containers(connection, marker, containers)
          end
+         connection.close
          containers
       end
 

@@ -75,22 +75,52 @@ module Nephos
    class Connection
       def initialize(uri)
          @uri = uri
+         @http = http_class.new(@uri.host, @uri.port)
       end
 
-      def do_request(request)
-         http = http_class.new(@uri.host, @uri.port)
-
+      def do_request(request, allow_conflict = false)
          request.add_qstring 'timeout', @uri.timeout.to_s
          request.complete
          HMACAuth.authorize request, @uri.account, @uri.shared_key
 
-         http.request(request)
+         response = @http.request(request)
+         check_response response, allow_conflict
+         response
+      end
+
+      def close
+         @http.close
       end
 
       def http_class
          # TODO: add proxy support
          Net::HTTP
       end
+
+      def check_response(response, allow_conflict = false)
+         if response.kind_of? Net::HTTPSuccess then
+            # nothing
+         elsif allow_conflict and response.kind_of? Net::HTTPConflict then
+            # nothing
+         elsif response.content_type == 'application/xml' then
+            raise NephosException.new(response.body)
+         else
+            response.value() # force error
+         end
+      end
    end
 
+   class NephosException < Exception
+      attr_reader :code, :exception_message, :stack_trace
+      def initialize(error_xml)
+         error = XmlSimple.xml_in(error_xml)
+         @code = error['Code']
+         details = error['ExceptionDetails'][0]
+         if details then
+            @exception_message = details['ExceptionMessage']
+            @stack_trace = details['StackTrace']
+         end
+         super error['Message']
+      end
+   end
 end
