@@ -8,8 +8,8 @@ module Nephos
          @uri = NephosUri.new svc_base_url, options[:account], options[:shared_key]
       end
 
-      def new_connection(request)
-         Connection.new @uri, request
+      def new_connection
+         Connection.new @uri
       end
 
       def request_path(partial_path)

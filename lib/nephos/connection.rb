@@ -73,19 +73,18 @@ module Nephos
    end
 
    class Connection
-      def initialize(uri, request)
+      def initialize(uri)
          @uri = uri
-         @request = request
       end
 
-      def do_request
+      def do_request(request)
          http = http_class.new(@uri.host, @uri.port)
 
-         @request.add_qstring 'timeout', @uri.timeout.to_s
-         @request.complete
-         HMACAuth.authorize @request, @uri.account, @uri.shared_key
+         request.add_qstring 'timeout', @uri.timeout.to_s
+         request.complete
+         HMACAuth.authorize request, @uri.account, @uri.shared_key
 
-         http.request(@request)
+         http.request(request)
       end
 
       def http_class

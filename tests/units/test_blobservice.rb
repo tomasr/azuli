@@ -16,7 +16,11 @@ class TestBlobService < Test::Unit::TestCase
 
    def test_can_list_containers
       list = @svc.list_containers
-      assert_greater(list.length, 0)
+      assert(list.length > 0)
+      assert_not_nil(list[0].name)
+      assert_not_nil(list[0].url)
+      assert_not_nil(list[0].last_modified)
+      assert_not_nil(list[0].etag)
    end
 end
 

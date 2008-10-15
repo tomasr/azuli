@@ -10,8 +10,8 @@ module Nephos
          request.add_metadata metadata
          request.set_property :publicaccess, public_access
 
-         connection = new_connection request
-         response = connection.do_request
+         connection = new_connection
+         response = connection.do_request request
          # if container already exist, that's fine
          check_response response, true
 
@@ -20,18 +20,38 @@ module Nephos
 
       def find_container(name)
          # TODO: implement
-         Container.new name
+         Container.new({'Name' => name})
       end
 
       def list_containers
+         connection = new_connection
+         marker = nil
+         containers = []
+         until marker == '' do
+            marker = do_list_containers(connection, marker, containers)
+         end
+         containers
+      end
+
+      private
+      def do_list_containers(connection, marker, containers)
          request = Nephos::Get.new request_path('')
          request.comp = 'list'
+         request.add_qstring('marker', marker) if marker
 
-         connection = new_connection request
-         response = connection.do_request
+         response = connection.do_request request
          check_response response
 
-         []
+         list_xml = XmlSimple.xml_in(response.body, 'ForceArray' => false)
+         containers.concat extract_containers(list_xml)
+
+         new_marker = list_xml['NextMarker']
+         new_marker == {} ? '' : new_marker[0]
+      end
+      def extract_containers(list)
+         parsed = list['Containers']['Container'].map { |container|
+            Container.new(container)
+         }
       end
    end
 end
