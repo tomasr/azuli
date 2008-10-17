@@ -16,11 +16,13 @@ module Nephos
 
          connection = new_connection
          connection.do_request(request, true)
-         find_container name
       end
 
       def find_container(name)
-         # TODO: implement
+         request = Nephos::Head.new request_path(name)
+         connection = new_connection
+         connection.do_request request
+
          Container.new({'Name' => name})
       end
 

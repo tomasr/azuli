@@ -10,8 +10,9 @@ class TestBlobService < Test::Unit::TestCase
 
    def test_can_create_container
       name = "x%x" % (rand() * 10000000)
-      container = @svc.create_container name, true, { :prop1 => 'value' }
-      assert_equal(name, container.name)
+      assert_nothing_raised { 
+         @svc.create_container name, true, { :prop1 => 'value' }
+      }
    end
 
    def test_can_list_containers
@@ -30,6 +31,13 @@ class TestBlobService < Test::Unit::TestCase
       list = @svc.list_containers :maxresults => 5
       assert((list.length > 0 and list.length < 6))
       assert_not_nil(@svc.last_marker)
+   end
+
+   def test_can_find_container
+      name = "x%x" % (rand() * 10000000)
+      @svc.create_container name
+      container = @svc.find_container name
+      assert_not_nil(container)
    end
 end
 

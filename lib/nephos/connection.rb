@@ -77,6 +77,11 @@ module Nephos
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
    end
+   class Head < NephosRequest
+      METHOD = 'HEAD'
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = false
+   end
 
    class Connection
       def initialize(uri)
