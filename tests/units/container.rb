@@ -20,14 +20,16 @@ class TestContainer < Test::Unit::TestCase
          'Last-Modified' => 'Fri, 17 Oct 2008 01:19:04 GMT',
          'ETag' => '0x8CAFE0D7AF4A4C0',
          # a metadata property
-         'x-ms-meta-prop1' => 'Property1',
+         'x-ms-meta-Prop1' => 'Property1',
          # an unrelated header
          'Server' => 'Nephos Blob Service Version 1.0 Microsoft-HTTPAPI/2.0',
       }
       container = Container.new('test1', '', headers)
       assert_equal('test1', container.name)
+      assert_equal('test1', container.path)
       assert_equal('0x8CAFE0D7AF4A4C0', container.etag)
-      assert_equal('Property1', container.metadata('prop1'))
+
+      assert_equal('Property1', container.metadata['Prop1'])
    end
 end
 

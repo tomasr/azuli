@@ -12,10 +12,12 @@ module Nephos
       def has_metadata?
          @metadata.nil?
       end
-      def metadata(name)
-         @metadata[name.downcase]
+      def metadata
+         @metadata
       end
-
+      def path
+         @name
+      end
 
       def self.validate_name(name)
          raise InvalidContainerName.new if name.length < 3

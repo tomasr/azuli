@@ -12,4 +12,9 @@ class Test::Unit::TestCase
       }
       Nephos.blob_service options
    end
+
+   def new_object_name
+      "x%x" % (rand() * 10000000)
+   end
+
 end

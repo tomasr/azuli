@@ -11,7 +11,7 @@ module Nephos
          name =~ Regexp.new(META_PREFIX)
       end
       def self.no_meta(name)
-         name.downcase.slice(META_PREFIX.length, name.length-META_PREFIX.length)
+         name.slice(META_PREFIX.length, name.length-META_PREFIX.length).capitalize
       end
       def self.as_meta(name)
          META_PREFIX + name

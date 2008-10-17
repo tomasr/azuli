@@ -9,7 +9,7 @@ class TestBlobService < Test::Unit::TestCase
    end
 
    def test_can_create_container
-      name = "x%x" % (rand() * 10000000)
+      name = new_object_name
       assert_nothing_raised { 
          @svc.create_container name, true, { :prop1 => 'value' }
       }
@@ -34,7 +34,7 @@ class TestBlobService < Test::Unit::TestCase
    end
 
    def test_can_find_container
-      name = "x%x" % (rand() * 10000000)
+      name = new_object_name
       @svc.create_container name
 
       container = @svc.find_container name
@@ -47,7 +47,7 @@ class TestBlobService < Test::Unit::TestCase
    end
 
    def test_can_delete_container_by_name
-      name = "x%x" % (rand() * 10000000)
+      name = new_object_name
       @svc.create_container name
 
       assert_nothing_raised {
@@ -55,5 +55,19 @@ class TestBlobService < Test::Unit::TestCase
       }
       assert_nil(@svc.find_container(name))
    end
+
+   def test_can_set_container_metadata
+      name = new_object_name
+      @svc.create_container name
+      container = @svc.find_container name
+      container.metadata.merge!({ 'Prop1' => 'value1', 'Prop2' => 'value2' })
+      @svc.update_metadata container
+
+      container = @svc.find_container name
+      assert_equal('value1', container.metadata['Prop1'])
+      assert_equal('value2', container.metadata['Prop2'])
+   end
+
+   private
 end
 

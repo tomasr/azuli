@@ -43,6 +43,15 @@ module Nephos
          containers
       end
 
+      def update_metadata(object)
+         request = Nephos::Put.new request_path(object.path)
+         request.comp = 'metadata'
+         request.add_metadata object.metadata
+
+         connection = new_connection
+         connection.do_request request
+      end
+
       private
       def do_list_containers(connection, options, containers)
          request = Nephos::Get.new request_path('')
