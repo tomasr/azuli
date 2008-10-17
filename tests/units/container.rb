@@ -45,6 +45,12 @@ class TestContainer < Test::Unit::TestCase
       Container.create(name)
       assert_nothing_raised { Container.delete(name) }
    end
+   def test_can_delete_container_instance
+      name = new_object_name
+      Container.create(name)
+      container = Container.find name
+      assert_nothing_raised { container.delete! }
+   end
    def test_can_list_containers
       containers = Container.list
       assert_not_nil(containers)

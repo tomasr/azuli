@@ -16,6 +16,9 @@ module Nephos
       def update
          Container.put_metadata(name, properties)
       end
+      def delete!
+         Container.delete name
+      end
 
       def self.find(name)
          container = nil
