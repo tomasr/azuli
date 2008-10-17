@@ -82,6 +82,11 @@ module Nephos
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = false
    end
+   class Delete < NephosRequest
+      METHOD = 'DELETE'
+      REQUEST_HAS_BODY = false
+      RESPONSE_HAS_BODY = false
+   end
 
    class Connection
       def initialize(uri)
@@ -89,14 +94,14 @@ module Nephos
          @http = http_class.new(@uri.host, @uri.port)
       end
 
-      def do_request(request, allow_conflict = false)
+      def do_request(request, allowed_responses = [])
          request.add_qstring 'timeout', @uri.timeout
          request.complete
 
          HMACAuth.authorize request, @uri.account, @uri.shared_key
 
          response = @http.request(request)
-         check_response response, allow_conflict
+         check_response response, allowed_responses
          response
       end
 
@@ -105,16 +110,20 @@ module Nephos
          Net::HTTP
       end
 
-      def check_response(response, allow_conflict = false)
+      def check_response(response, allowed_responses = [])
          if response.kind_of? Net::HTTPSuccess then
             # nothing
-         elsif allow_conflict and response.kind_of? Net::HTTPConflict then
+         elsif is_of_type(response, allowed_responses) then
             # nothing
          elsif response.content_type == 'application/xml' then
             raise NephosException.new(response.body)
          else
             response.value() # force error
          end
+      end
+      private
+      def is_of_type(response, allowed_responses)
+         allowed_responses.any? { |resp| response.kind_of?(resp) }
       end
    end
 

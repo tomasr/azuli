@@ -15,15 +15,24 @@ module Nephos
          request.set_property :publicaccess, public_access
 
          connection = new_connection
-         connection.do_request(request, true)
+         connection.do_request(request, [Net::HTTPConflict])
       end
 
       def find_container(name)
          request = Nephos::Head.new request_path(name)
          connection = new_connection
-         response = connection.do_request request
+         response = connection.do_request(request, [Net::HTTPNotFound])
+         if response.kind_of? Net::HTTPNotFound then
+            nil
+         else
+            Container.new(name, url_for(name), response)
+         end
+      end
 
-         Container.new(name, url_for(name), response)
+      def delete(name)
+         request = Nephos::Delete.new request_path(name)
+         connection = new_connection
+         response = connection.do_request request
       end
 
       def list_containers(options = {})

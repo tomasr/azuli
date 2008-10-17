@@ -41,5 +41,19 @@ class TestBlobService < Test::Unit::TestCase
       assert_not_nil(container)
       assert_match(%r{http://.*/testaccount1/}, container.url.to_s)
    end
+   def test_find_container_returns_null_if_not_found
+      container = @svc.find_container 'will_not_exists_in_store'
+      assert_nil(container)
+   end
+
+   def test_can_delete_container_by_name
+      name = "x%x" % (rand() * 10000000)
+      @svc.create_container name
+
+      assert_nothing_raised {
+         @svc.delete name
+      }
+      assert_nil(@svc.find_container(name))
+   end
 end
 
