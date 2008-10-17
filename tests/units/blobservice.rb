@@ -36,8 +36,10 @@ class TestBlobService < Test::Unit::TestCase
    def test_can_find_container
       name = "x%x" % (rand() * 10000000)
       @svc.create_container name
+
       container = @svc.find_container name
       assert_not_nil(container)
+      assert_match(%r{http://.*/testaccount1/}, container.url.to_s)
    end
 end
 

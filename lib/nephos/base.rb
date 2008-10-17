@@ -13,7 +13,11 @@ module Nephos
       end
 
       def request_path(partial_path)
-         '/' + @uri.account + '/' + partial_path # TODO: Add qstring
+         '/' + @uri.account + '/' + partial_path
+      end
+
+      def url_for(partial_path)
+         @uri.base_url + request_path(partial_path)
       end
 
    end

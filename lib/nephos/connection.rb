@@ -22,12 +22,12 @@ module Nephos
          }
       end
       def set_metadata(name, value)
-         self['x-ms-meta-' + name.to_s] = value.to_s
+         self[Metadata.as_meta(name.to_s)] = value.to_s
       end
       def metadata
          metaprops = {}
          headers.each_key { |key|
-            metaprops[key] = self[key] if key =~ /^x-ms-meta-/
+            metaprops[key] = self[key] if Metadata.is_meta(key)
          }
          metaprops
       end

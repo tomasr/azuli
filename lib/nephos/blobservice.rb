@@ -21,9 +21,9 @@ module Nephos
       def find_container(name)
          request = Nephos::Head.new request_path(name)
          connection = new_connection
-         connection.do_request request
+         response = connection.do_request request
 
-         Container.new({'Name' => name})
+         Container.new(name, url_for(name), response)
       end
 
       def list_containers(options = {})
@@ -53,7 +53,7 @@ module Nephos
          containers = list['Containers']
          if containers.length > 0 then
             parsed = containers['Container'].map { |container|
-               Container.new(container)
+               Container.from_list(container)
             }
          end
          parsed or []

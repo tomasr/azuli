@@ -11,6 +11,7 @@ require 'xmlsimple'
 $:.unshift(File.dirname(__FILE__))
 
 require 'nephos/auth'
+require 'nephos/metadata'
 require 'nephos/nephosuri'
 require 'nephos/connection'
 require 'nephos/base'
