@@ -2,13 +2,24 @@ module Nephos
 
    class NephosUri
       attr_accessor :base_url, :account, :shared_key
-      attr_accessor :timeout, :other_options
+      attr_accessor :timeout, :name
+      DEFAULT = 'default'
 
-      def initialize(base_url, account, shared_key)
-         @base_url = URI.parse base_url
-         @account = account
-         @shared_key = shared_key
-         @timeout = 30
+      def initialize(options)
+         @name = options[:name]
+         @base_url = URI.parse options[:url]
+         @account = options[:account]
+         @shared_key = options[:shared_key]
+         @timeout = options[:timeout]
+      end
+
+      def self.blob(options)
+         default_opts = {
+            :url => 'http://blob.windows.net/',
+            :name => DEFAULT,
+            :timeout => 30
+         }
+         NephosUri.new(default_opts.merge(options))
       end
 
       def host
@@ -19,9 +30,6 @@ module Nephos
       end
       def operation(op)
          @comp = op
-      end
-      def other_options(options)
-         @other_options = options
       end
       def connect_url
          @base_url.normalize

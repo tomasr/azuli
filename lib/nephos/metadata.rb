@@ -16,6 +16,13 @@ module Nephos
       def self.as_meta(name)
          META_PREFIX + name
       end
+      def self.to_meta(properties = {})
+         meta = {}
+         properties.each_pair { |key,value|
+            meta[self.as_meta(key)] = value.to_s
+         }
+         meta
+      end
 
       private
       def extract_metadata!(headers)

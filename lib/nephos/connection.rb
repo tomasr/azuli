@@ -89,9 +89,25 @@ module Nephos
    end
 
    class Connection
+      class << self
+         def set_blob_connection(options = {})
+            @blob_connections ||= {}
+            uri = NephosUri.blob(options)
+            @blob_connections[uri.name] = Connection.new(uri)
+         end
+         def get_blob_connection(name = nil)
+            @blob_connections ||= {}
+            @blob_connections[(name or NephosUri::DEFAULT)]
+         end
+      end
+
       def initialize(uri)
          @uri = uri
          @http = http_class.new(@uri.host, @uri.port)
+      end
+
+      def make_path(path)
+         "/#{@uri.account}/#{path}"
       end
 
       def do_request(request, allowed_responses = [])
