@@ -1,23 +1,19 @@
 module Nephos
    class Container < BaseObject
 
-      def initialize(connection, name, props)
-         super(connection, name, props)
-         extract_properties!(props)
-      end
-
-      def has_metadata?
-         @metadata.nil?
-      end
-      def metadata
-         @metadata
-      end
       # update the metadata associated with this container
       def update
          Container.put_metadata(name, properties)
       end
       def delete!
          Container.delete name
+      end
+      def reload!
+         Container.get_props_or_nil(name) { |connection, response|
+            if response then
+               @properties = response
+            end
+         }
       end
 
       class << self
@@ -67,13 +63,6 @@ module Nephos
             parsed or []
          end
       end
-      private
-      def extract_properties!(props)
-         date = (props['Last-Modified'] or props['LastModified'])
-         @last_modified = Time.rfc2822(date)
-         @etag = (props['Etag'] or props['ETag'])
-      end
-
    end
 
    class ListResult < Array

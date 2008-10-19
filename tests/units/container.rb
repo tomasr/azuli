@@ -71,5 +71,16 @@ class TestContainer < Test::Unit::TestCase
       container = Container.find(name)
       assert_equal('Property2', container.get_meta('prop2'))
    end
+   def test_can_reload
+      name = new_object_name
+      Container.create(name)
+      container = Container.find(name)
+      container.set_meta('prop2', 'Property2')
+      etag = container.etag
+      container.update
+
+      container.reload!
+      assert_not_equal(container.etag, etag)
+   end
 end
 
