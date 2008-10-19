@@ -9,7 +9,7 @@ module Nephos
          Container.delete name
       end
       def reload!
-         Container.get_props_or_nil(name) { |connection, response|
+         self.class.get_props_or_nil(name) { |connection, response|
             if response then
                @properties = response
             end
