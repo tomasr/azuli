@@ -7,6 +7,7 @@ require 'time'
 require 'date'
 require 'open-uri'
 require 'xmlsimple'
+require 'mime/types'
 
 $:.unshift(File.dirname(__FILE__))
 

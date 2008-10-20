@@ -31,9 +31,10 @@ module Nephos
             response = connection.do_request(request, [Net::HTTPNotFound])
             yield(connection, (response.kind_of?(Net::HTTPNotFound) ? nil : response))
          end
-         def put(path, properties)
+         def put(path, properties, content=nil)
             connection = Connection.get_blob_connection
             request = Nephos::Put.new(connection.make_path(path), properties)
+            set_request_content(request, content)
             connection.do_request(request, [Net::HTTPConflict])
          end
          def put_metadata(path, properties)
@@ -53,6 +54,27 @@ module Nephos
             request.comp = 'list'
             request.add_qstring_params options
             connection.do_request request
+         end
+         private
+         def set_request_content(request, content)
+            if !request.nil? then
+               if content.kind_of? File then
+                  request.body_stream = content
+               else
+                  request.body = content
+               end
+               infer_content_type(request, content)
+            end
+         end
+         def infer_content_type(request, content)
+            if !content.nil? then
+               if content.kind_of? String then
+                  request.content_type = 'text/plain'
+               else
+                  types = MIME::Types.type_for content.path
+                  request.content_type = types.length > 0 ? types[0].to_s : 'text/plain'
+               end
+            end
          end
       end
 
