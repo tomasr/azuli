@@ -3,10 +3,10 @@ module Nephos
 
       # update the metadata associated with this container
       def update
-         Container.put_metadata(name, properties)
+         self.class.put_metadata(name, properties)
       end
       def delete!
-         Container.delete name
+         self.class.delete name
       end
       def reload!
          self.class.get_props_or_nil(name) { |connection, response|

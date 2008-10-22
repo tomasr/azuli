@@ -46,4 +46,14 @@ class TestBlob < Test::Unit::TestCase
       assert_equal('text/xml', blob.content_type)
       assert_equal('value1', blob.get_meta('prop1'))
    end
+   def test_can_update_metadata
+      name = new_object_name
+      props = { 'prop1' => 'value1' }
+      blob = Blob.store(@folder, name, @text, props)
+      blob.set_meta 'prop1', 'value2'
+      blob.update
+
+      blob = Blob.find(@folder, name)
+      assert_equal('value2', blob.get_meta('prop1'))
+   end
 end

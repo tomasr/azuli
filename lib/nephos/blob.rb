@@ -13,6 +13,14 @@ module Nephos
       def content_md5
          get_prop('content-md5')
       end
+      def blob_path
+         self.class.blob_path container_name, name
+      end
+
+      def update
+         self.class.put_metadata blob_path, properties
+      end
+
 
       class << self
          def store(container_name, blob_name, content, properties={})
