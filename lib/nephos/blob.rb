@@ -10,12 +10,16 @@ module Nephos
       def content_type
          get_prop('content-type')
       end
+      def content_md5
+         get_prop('content-md5')
+      end
 
       class << self
          def store(container_name, blob_name, content, properties={})
             actual_props = Metadata.fixup_meta properties
             Container.validate_name container_name
-            put(blob_path(container_name, blob_name), actual_props, content)
+            response = put(blob_path(container_name, blob_name), actual_props, content)
+            Blob.new(blob_connection, container_name, blob_name, response)
          end
 
          def blob_path(container_name, blob_name)

@@ -26,34 +26,37 @@ module Nephos
 
       class << self
          def get_props_or_nil(path)
-            connection = Connection.get_blob_connection
+            connection = blob_connection
             request = Nephos::Head.new connection.make_path(path)
             response = connection.do_request(request, [Net::HTTPNotFound])
             yield(connection, (response.kind_of?(Net::HTTPNotFound) ? nil : response))
          end
          def put(path, properties, content=nil)
-            connection = Connection.get_blob_connection
+            connection = blob_connection
             request = Nephos::Put.new(connection.make_path(path), properties)
             set_request_content(request, content)
             connection.do_request(request, [Net::HTTPConflict])
          end
          def put_metadata(path, properties)
-            connection = Connection.get_blob_connection
+            connection = blob_connection
             request = Nephos::Put.new(connection.make_path(path), properties)
             request.comp = 'metadata'
             connection.do_request request
          end
          def delete(path)
-            connection = Connection.get_blob_connection
+            connection = blob_connection
             request = Nephos::Delete.new(connection.make_path(path))
             connection.do_request request
          end
          def get_list(path, options={})
-            connection = Connection.get_blob_connection
+            connection = blob_connection
             request = Nephos::Get.new(connection.make_path(path))
             request.comp = 'list'
             request.add_qstring_params options
             connection.do_request request
+         end
+         def blob_connection
+            Connection.get_blob_connection
          end
          private
          def set_request_content(request, content)
