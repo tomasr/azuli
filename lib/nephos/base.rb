@@ -63,7 +63,9 @@ module Nephos
                else
                   request.body = content
                end
-               infer_content_type(request, content)
+               if !request['Content-Type'] then
+                  infer_content_type(request, content)
+               end
             end
          end
          def infer_content_type(request, content)

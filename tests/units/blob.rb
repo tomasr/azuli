@@ -28,4 +28,13 @@ class TestBlob < Test::Unit::TestCase
       content = File.open '../content/logo.gif'
       assert_nothing_raised { Blob.store(@folder, name, content) }
    end
+   def test_can_get_blob_properties
+      name = new_object_name
+      props = { 'Content-Type' => 'text/xml', 'prop1' => 'value1' }
+      Blob.store(@folder, name, @text, props)
+      blob = Blob.find(@folder, name)
+      assert_not_nil(blob)
+      assert_equal('text/xml', blob.content_type)
+      assert_equal('value1', blob.get_meta('prop1'))
+   end
 end
