@@ -5,6 +5,7 @@ module Nephos
       def initialize(connection, container_name, name, properties={})
          super(connection, name, properties)
          @container_name = container_name
+         @content = (properties.respond_to? :body) ? properties.body : nil
       end
 
       def content_type
@@ -21,9 +22,12 @@ module Nephos
          self.class.put_metadata blob_path, properties
       end
       def content
-         response = self.class.get_object blob_path
-         @properties = response
-         response.body
+         if !@content or @content == '' then
+            response = self.class.get_object blob_path
+            @properties = response
+            @content = response.body
+         end
+         @content
       end
 
 
@@ -40,12 +44,18 @@ module Nephos
          end
 
          def find(container_name, blob_name)
-            blob = nil
             path = blob_path(container_name, blob_name)
             get_props_or_nil(path) { |connection, response|
                if response then
-                  blob = Blob.new(connection, container_name, name, response)
+                  Blob.new(connection, container_name, name, response)
                end
+            }
+         end
+
+         def get(container_name, blob_name)
+            blob = nil
+            get_object(blob_path(container_name, blob_name)) { |connection, response|
+               blob = Blob.new(connection, container_name, name, response)
             }
          end
       end
