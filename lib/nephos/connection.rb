@@ -107,7 +107,11 @@ module Nephos
       end
 
       def make_path(path)
-         "/#{@uri.account}/#{path}"
+         if @uri.use_path_uri then
+            "/#{@uri.account}/#{path}"
+         else
+            "/#{path}"
+         end
       end
 
       def do_request(request, allowed_responses = [])

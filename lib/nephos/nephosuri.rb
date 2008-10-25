@@ -2,7 +2,7 @@ module Nephos
 
    class NephosUri
       attr_accessor :base_url, :account, :shared_key
-      attr_accessor :timeout, :name
+      attr_accessor :timeout, :name, :use_path_uri
       DEFAULT = 'default'
 
       def initialize(options)
@@ -11,6 +11,8 @@ module Nephos
          @account = options[:account]
          @shared_key = options[:shared_key]
          @timeout = options[:timeout]
+         @use_path_uri = options[:use_path_uri]
+         @base_url.host = @account + '.' + @base_url.host unless @use_path_uri
       end
 
       def self.blob(options)
