@@ -8,7 +8,8 @@ class Test::Unit::TestCase
       @options = {
          :account => 'testaccount1',
          :shared_key => 'FjUfNl1KiJttbXlsdkMzBTC7WagvrRM9/g6UPBuy0ypCpAbYTL6/KA+dI/7gyoWvLFYmah3IviUP1jykOHHOlA==',
-         :url => 'http://localhost:8081'
+         :url => 'http://localhost:8081',
+         :use_path_uri => true
       }
       Connection.set_blob_connection @options
    end

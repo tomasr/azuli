@@ -17,7 +17,7 @@ module Nephos
 
       def self.blob(options)
          default_opts = {
-            :url => 'http://blob.windows.net/',
+            :url => 'http://blob.core.windows.net/',
             :name => DEFAULT,
             :timeout => 30
          }
