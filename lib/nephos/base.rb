@@ -31,6 +31,16 @@ module Nephos
             response = connection.do_request(request, [Net::HTTPNotFound])
             yield(connection, (response.kind_of?(Net::HTTPNotFound) ? nil : response))
          end
+         def get_object(path, &block)
+            connection = blob_connection
+            request = Nephos::Get.new connection.make_path(path)
+            response = connection.do_request request
+            if block then
+               yield(connection, response)
+            else
+               response
+            end
+         end
          def put(path, properties, content=nil)
             connection = blob_connection
             request = Nephos::Put.new(connection.make_path(path), properties)

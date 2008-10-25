@@ -20,6 +20,11 @@ module Nephos
       def update
          self.class.put_metadata blob_path, properties
       end
+      def content
+         response = self.class.get_object blob_path
+         @properties = response
+         response.body
+      end
 
 
       class << self

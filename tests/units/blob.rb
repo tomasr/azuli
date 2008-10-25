@@ -56,4 +56,10 @@ class TestBlob < Test::Unit::TestCase
       blob = Blob.find(@folder, name)
       assert_equal('value2', blob.get_meta('prop1'))
    end
+   def test_can_get_blob_content
+      name = new_object_name
+      blob = Blob.store(@folder, name, @text)
+      content = blob.content
+      assert_equal(@text, content)
+   end
 end
