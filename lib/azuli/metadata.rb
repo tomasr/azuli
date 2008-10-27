@@ -1,4 +1,4 @@
-module Nephos
+module Azuli
 
    class Metadata < Hash
       META_PREFIX = 'x-ms-meta-'

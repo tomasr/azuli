@@ -1,6 +1,6 @@
-module Nephos
+module Azuli
 
-   class NephosUri
+   class AzureUri
       attr_accessor :base_url, :account, :shared_key
       attr_accessor :timeout, :name, :use_path_uri
       DEFAULT = 'default'
@@ -21,7 +21,7 @@ module Nephos
             :name => DEFAULT,
             :timeout => 30
          }
-         NephosUri.new(default_opts.merge(options))
+         AzureUri.new(default_opts.merge(options))
       end
 
       def host

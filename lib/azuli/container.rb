@@ -1,4 +1,4 @@
-module Nephos
+module Azuli
    class Container < BaseObject
 
       # update the metadata associated with this container

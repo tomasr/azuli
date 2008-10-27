@@ -1,4 +1,4 @@
-module Nephos
+module Azuli
    class Blob < BaseObject
       attr_reader :container_name
 
@@ -21,11 +21,15 @@ module Nephos
       def update
          self.class.put_metadata blob_path, properties
       end
-      def content
+      def content(&block)
          if !@content or @content == '' then
             response = self.class.get_object blob_path
             @properties = response
-            @content = response.body
+            if block then
+               response.read_body(&block)
+            else
+               @content = response.body
+            end
          end
          @content
       end

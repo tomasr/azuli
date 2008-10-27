@@ -1,4 +1,4 @@
-module Nephos
+module Azuli
    class BaseObject
       attr_reader :name, :properties
 
@@ -27,13 +27,13 @@ module Nephos
       class << self
          def get_props_or_nil(path)
             connection = blob_connection
-            request = Nephos::Head.new connection.make_path(path)
+            request = Azuli::Head.new connection.make_path(path)
             response = connection.do_request(request, [Net::HTTPNotFound])
             yield(connection, (response.kind_of?(Net::HTTPNotFound) ? nil : response))
          end
          def get_object(path, &block)
             connection = blob_connection
-            request = Nephos::Get.new connection.make_path(path)
+            request = Azuli::Get.new connection.make_path(path)
             response = connection.do_request request
             if block then
                yield(connection, response)
@@ -43,24 +43,24 @@ module Nephos
          end
          def put(path, properties, content=nil)
             connection = blob_connection
-            request = Nephos::Put.new(connection.make_path(path), properties)
+            request = Azuli::Put.new(connection.make_path(path), properties)
             set_request_content(request, content)
             connection.do_request(request, [Net::HTTPConflict])
          end
          def put_metadata(path, properties)
             connection = blob_connection
-            request = Nephos::Put.new(connection.make_path(path), properties)
+            request = Azuli::Put.new(connection.make_path(path), properties)
             request.comp = 'metadata'
             connection.do_request request
          end
          def delete(path)
             connection = blob_connection
-            request = Nephos::Delete.new(connection.make_path(path))
+            request = Azuli::Delete.new(connection.make_path(path))
             connection.do_request request
          end
          def get_list(path, options={})
             connection = blob_connection
-            request = Nephos::Get.new(connection.make_path(path))
+            request = Azuli::Get.new(connection.make_path(path))
             request.comp = 'list'
             request.add_qstring_params options
             connection.do_request request

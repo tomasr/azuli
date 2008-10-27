@@ -1,6 +1,6 @@
-module Nephos
+module Azuli
 
-   class NephosRequest < Net::HTTPRequest
+   class AzureRequest < Net::HTTPRequest
       attr_reader :signable_path
       def comp
          qstring_args['comp']
@@ -67,22 +67,22 @@ module Nephos
          spath
       end
    end
-   class Put < NephosRequest
+   class Put < AzureRequest
       METHOD = 'PUT'
       REQUEST_HAS_BODY = true
       RESPONSE_HAS_BODY = true
    end
-   class Get < NephosRequest
+   class Get < AzureRequest
       METHOD = 'GET'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = true
    end
-   class Head < NephosRequest
+   class Head < AzureRequest
       METHOD = 'HEAD'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = false
    end
-   class Delete < NephosRequest
+   class Delete < AzureRequest
       METHOD = 'DELETE'
       REQUEST_HAS_BODY = false
       RESPONSE_HAS_BODY = false
@@ -92,12 +92,12 @@ module Nephos
       class << self
          def set_blob_connection(options = {})
             @blob_connections ||= {}
-            uri = NephosUri.blob(options)
+            uri = AzureUri.blob(options)
             @blob_connections[uri.name] = Connection.new(uri)
          end
          def get_blob_connection(name = nil)
             @blob_connections ||= {}
-            @blob_connections[(name or NephosUri::DEFAULT)]
+            @blob_connections[(name or AzureUri::DEFAULT)]
          end
       end
 
@@ -114,15 +114,19 @@ module Nephos
          end
       end
 
-      def do_request(request, allowed_responses = [])
+      def do_request(request, allowed_responses = [], &block)
          request.add_qstring 'timeout', @uri.timeout
          request.complete
 
          HMACAuth.authorize request, @uri.account, @uri.shared_key
 
-         response = @http.request(request)
-         check_response response, allowed_responses
-         response
+         @http.request(request) { |response|
+            check_response response, allowed_responses
+            if block then
+               response.read_body &block
+            end
+            response
+         }
       end
 
       def http_class
@@ -136,28 +140,31 @@ module Nephos
          elsif is_of_type(response, allowed_responses) then
             # nothing
          elsif response.content_type == 'application/xml' then
-            raise NephosException.new(response.body)
+            raise AzureException.from_xml(response.body)
          else
-            response.value() # force error
+            raise AzureException.from_http(response)
          end
       end
       private
+
       def is_of_type(response, allowed_responses)
          allowed_responses.any? { |resp| response.kind_of?(resp) }
       end
    end
 
-   class NephosException < Exception
-      attr_reader :code, :exception_message, :stack_trace
-      def initialize(error_xml)
+   class AzureException < Exception
+      attr_reader :code
+      def initialize(code, message)
+         @code = code
+         super(message)
+      end
+
+      def self.from_xml(error_xml)
          error = XmlSimple.xml_in(error_xml)
-         @code = error['Code']
-         details = error['ExceptionDetails'][0]
-         if details then
-            @exception_message = details['ExceptionMessage']
-            @stack_trace = details['StackTrace']
-         end
-         super error['Message']
+         AzureException.new(error['Code'], error['Message'])
+      end
+      def self.from_http(response)
+         AzureException.new(response.code, response.message)
       end
    end
 end

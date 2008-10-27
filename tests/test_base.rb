@@ -1,8 +1,8 @@
 require 'test/unit'
-require File.dirname(__FILE__) + '/../lib/nephos'
+require File.dirname(__FILE__) + '/../lib/azuli'
 
 class Test::Unit::TestCase
-   include Nephos
+   include Azuli
 
    def setup
       @options = {

@@ -68,4 +68,13 @@ class TestBlob < Test::Unit::TestCase
       blob = Blob.get(@folder, name)
       assert_equal(@text, blob.content)
    end
+   def test_can_get_blob_content_chunked
+      name = new_object_name
+      blob = Blob.store(@folder, name, @text)
+      str = ''
+      blob.content { |text|
+         str << text
+      }
+      assert_equal(@text, str)
+   end
 end

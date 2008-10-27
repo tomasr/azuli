@@ -1,7 +1,7 @@
 # based on the Cloud Computing SDK documentation and
 # partially on the auth-hmac library 
 # http://github.com/seangeo/auth-hmac
-module Nephos
+module Azuli
    class HMACAuth
       AUTHORIZATION_HEADER = 'Authorization'
       CONTENT_TYPE = 'Content-Type'

@@ -1,4 +1,4 @@
-module Nephos
+module Azuli
    class Parser
       def self.get(xml)
          options = {
