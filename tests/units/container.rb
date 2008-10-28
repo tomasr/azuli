@@ -59,7 +59,7 @@ class TestContainer < Test::Unit::TestCase
       containers = Container.list :maxresults => 5
       assert(containers.length > 0)
       assert(containers.length <= 5)
-      assert_not_nil(containers.marker)
+      assert_not_nil(containers.marker) if containers.length == 5
    end
    def test_can_update_metadata
       name = new_object_name

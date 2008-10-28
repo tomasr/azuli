@@ -6,8 +6,8 @@ class Test::Unit::TestCase
 
    def setup
       @options = {
-         :account => 'testaccount1',
-         :shared_key => 'FjUfNl1KiJttbXlsdkMzBTC7WagvrRM9/g6UPBuy0ypCpAbYTL6/KA+dI/7gyoWvLFYmah3IviUP1jykOHHOlA==',
+         :account => 'devstoreaccount1',
+         :shared_key => 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==',
          :url => 'http://localhost:8081',
          :use_path_uri => true
       }

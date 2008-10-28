@@ -1,0 +1,3 @@
+Azuli is a simple client library for the Windows Azure Cloud Computing Platform. Right now, only the Blob services are supported, but the idea is to also support the queue and table services in time.
+
+The current code is ugly, but I hope to improve it :)
