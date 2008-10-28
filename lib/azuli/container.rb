@@ -1,5 +1,5 @@
 module Azuli
-   class Container < BaseObject
+   class Container < BlobBase
 
       # update the metadata associated with this container
       def update

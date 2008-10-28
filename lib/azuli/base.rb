@@ -26,13 +26,13 @@ module Azuli
 
       class << self
          def get_props_or_nil(path)
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Head.new connection.make_path(path)
             response = connection.do_request(request, [Net::HTTPNotFound])
             yield(connection, (response.kind_of?(Net::HTTPNotFound) ? nil : response))
          end
          def get_object(path, &block)
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Get.new connection.make_path(path)
             response = connection.do_request request
             if block then
@@ -42,31 +42,28 @@ module Azuli
             end
          end
          def put(path, properties, content=nil)
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Put.new(connection.make_path(path), properties)
             set_request_content(request, content)
             connection.do_request(request, [Net::HTTPConflict])
          end
          def put_metadata(path, properties)
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Put.new(connection.make_path(path), properties)
             request.comp = 'metadata'
             connection.do_request request
          end
          def delete(path)
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Delete.new(connection.make_path(path))
             connection.do_request request
          end
          def get_list(path, options={})
-            connection = blob_connection
+            connection = new_connection
             request = Azuli::Get.new(connection.make_path(path))
             request.comp = 'list'
             request.add_qstring_params options
             connection.do_request request
-         end
-         def blob_connection
-            Connection.get_blob_connection
          end
          private
          def set_request_content(request, content)
@@ -109,6 +106,17 @@ module Azuli
       def canonicalize(name)
          # cool trick from Net::Http
          name.split(/-/).map {|s| s.capitalize }.join('-')
+      end
+   end
+
+   class BlobBase < BaseObject
+      def self.new_connection
+         Connection.get_blob_connection
+      end
+   end
+   class QueueBase < BaseObject
+      def self.new_connection
+         Connection.get_queue_connection
       end
    end
 end

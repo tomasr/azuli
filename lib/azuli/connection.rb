@@ -99,6 +99,15 @@ module Azuli
             @blob_connections ||= {}
             @blob_connections[(name or AzureUri::DEFAULT)]
          end
+         def set_queue_connection(options = {})
+            @queue_connections ||= {}
+            uri = AzureUri.queue(options)
+            @queue_connections[uri.name] = Connection.new(uri)
+         end
+         def get_queue_connection(name = nil)
+            @queue_connections ||= {}
+            @queue_connections[(name or AzureUri::DEFAULT)]
+         end
       end
 
       def initialize(uri)

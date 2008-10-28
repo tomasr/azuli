@@ -12,6 +12,13 @@ class Test::Unit::TestCase
          :use_path_uri => true
       }
       Connection.set_blob_connection @options
+      @options = {
+         :account => 'devstoreaccount1',
+         :shared_key => 'Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==',
+         :url => 'http://localhost:10001',
+         :use_path_uri => true
+      }
+      Connection.set_queue_connection @options
    end
 
    def new_object_name

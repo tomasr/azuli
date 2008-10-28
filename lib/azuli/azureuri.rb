@@ -24,6 +24,15 @@ module Azuli
          AzureUri.new(default_opts.merge(options))
       end
 
+      def self.queue(options)
+         default_opts = {
+            :url => 'http://queue.core.windows.net/',
+            :name => DEFAULT,
+            :timeout => 30
+         }
+         AzureUri.new(default_opts.merge(options))
+      end
+
       def host
          @base_url.host
       end
