@@ -72,6 +72,11 @@ module Azuli
       REQUEST_HAS_BODY = true
       RESPONSE_HAS_BODY = true
    end
+   class Post < AzureRequest
+      METHOD = 'POST'
+      REQUEST_HAS_BODY = true
+      RESPONSE_HAS_BODY = true
+   end
    class Get < AzureRequest
       METHOD = 'GET'
       REQUEST_HAS_BODY = false

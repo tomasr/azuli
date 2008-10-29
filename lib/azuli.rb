@@ -8,6 +8,7 @@ require 'date'
 require 'open-uri'
 require 'xmlsimple'
 require 'mime/types'
+require 'builder'
 
 $:.unshift(File.dirname(__FILE__))
 

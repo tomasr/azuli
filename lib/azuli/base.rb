@@ -47,6 +47,13 @@ module Azuli
             set_request_content(request, content)
             connection.do_request(request, [Net::HTTPConflict])
          end
+         def post(path, content=nil, qstring={})
+            connection = new_connection
+            request = Azuli::Post.new(connection.make_path(path))
+            set_request_content(request, content)
+            request.add_qstring_params qstring
+            connection.do_request request
+         end
          def put_metadata(path, properties)
             connection = new_connection
             request = Azuli::Put.new(connection.make_path(path), properties)
